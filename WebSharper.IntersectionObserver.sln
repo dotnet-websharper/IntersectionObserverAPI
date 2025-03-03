@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35527.113
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "WebSharper.IntersectionObserver", "WebSharper.IntersectionObserver\WebSharper.IntersectionObserver.fsproj", "{B6DEA824-3B51-4221-9DCD-DCD1C373FC86}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "WebSharper.IntersectionObserver.Sample", "WebSharper.IntersectionObserver.Sample\WebSharper.IntersectionObserver.Sample.fsproj", "{6D9FFD46-977B-4005-AD8C-616A6CEBD939}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B6DEA824-3B51-4221-9DCD-DCD1C373FC86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6DEA824-3B51-4221-9DCD-DCD1C373FC86}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6DEA824-3B51-4221-9DCD-DCD1C373FC86}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6DEA824-3B51-4221-9DCD-DCD1C373FC86}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D9FFD46-977B-4005-AD8C-616A6CEBD939}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D9FFD46-977B-4005-AD8C-616A6CEBD939}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D9FFD46-977B-4005-AD8C-616A6CEBD939}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D9FFD46-977B-4005-AD8C-616A6CEBD939}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F5BAFBED-B898-4FB7-859C-928E9EF5F5DB}
+	EndGlobalSection
+EndGlobal
