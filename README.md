@@ -27,8 +27,6 @@ To use this package in your WebSharper project, add the NuGet package:
 ### Prerequisites
 
 - [.NET SDK](https://dotnet.microsoft.com/download) installed on your machine.
-- Node.js and npm (for building web assets).
-- WebSharper tools.
 
 ### Steps
 
