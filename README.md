@@ -75,37 +75,36 @@ module Client =
     type IndexTemplate = Template<"wwwroot/index.html", ClientLoad.FromDocument>
 
     // Function to observe an element's visibility changes
-    let observeElement (targetBox: Dom.Element) =
-        // Create a new IntersectionObserver instance with a callback function
-        let observer = new IntersectionObserver((fun (entries: IntersectionObserverEntry array) ->
-            printfn("for each")
-            for entry in entries do
-                // Log the observed element and its visibility status
-                printfn($"Observed: {entry.Target}, isIntersecting: {entry.IsIntersecting}")
-                if (entry.IsIntersecting) then
-                    // If the element is visible, add the "visible" class
-                    printfn("Add visible")
-                    entry.Target.ClassList.Add("visible")
-                else
-                    // If the element is not visible, remove the "visible" class
-                    printfn("Remove visible")
-                    entry.Target.ClassList.Remove("visible")
-        ), IntersectionObserverOptions(Threshold = 0.5))
+    let observeElement () =
+      // Select the element with the class "observer-box"
+      let targetBox = JS.Document.QuerySelector(".observer-box")
 
-        // Start observing the target element
-        observer.Observe(targetBox)
+      // Create a new IntersectionObserver instance with a callback function
+      let observer = new IntersectionObserver((fun (entries: IntersectionObserverEntry array) ->
+         printfn("for each")
+         for entry in entries do
+               // Log the observed element and its visibility status
+               printfn($"Observed: {entry.Target}, isIntersecting: {entry.IsIntersecting}")
+               if (entry.IsIntersecting) then
+                  // If the element is visible, add the "visible" class
+                  printfn("Add visible")
+                  entry.Target.ClassList.Add("visible")
+               else
+                  // If the element is not visible, remove the "visible" class
+                  printfn("Remove visible")
+                  entry.Target.ClassList.Remove("visible")
+      ), IntersectionObserverOptions(Threshold = 0.5))
+
+      // Start observing the target element
+      observer.Observe(targetBox)
 
     [<SPAEntryPoint>]
     let Main () =
-        // Select the element with the class "observer-box"
-        let targetBox = JS.Document.QuerySelector(".observer-box")
-
-        // If the element exists, start observing it
-        if not (isNull targetBox) then
-            observeElement(targetBox)
-
         // Initialize the UI template
         IndexTemplate.Main()
+            .PageInit(fun () ->
+               observeElement()
+            )
             .Doc()
         |> Doc.RunById "main"
 ```

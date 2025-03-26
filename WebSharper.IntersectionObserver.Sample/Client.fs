@@ -13,7 +13,8 @@ module Client =
     // and refresh your browser, no need to recompile unless you add or remove holes.
     type IndexTemplate = Template<"wwwroot/index.html", ClientLoad.FromDocument>
 
-    let observeElement (targetBox: Dom.Element) = 
+    let observeElement () = 
+        let targetBox = JS.Document.QuerySelector(".observer-box")
 
         let observer = new IntersectionObserver((fun (entries: IntersectionObserverEntry array) -> 
             printfn("for each")
@@ -31,11 +32,11 @@ module Client =
 
     [<SPAEntryPoint>]
     let Main () =
-        let targetBox = JS.Document.QuerySelector(".observer-box")
-
-        if not (isNull targetBox) then
-            observeElement(targetBox)
+        
 
         IndexTemplate.Main()
+            .PageInit(fun () ->
+                observeElement()
+            )
             .Doc()
         |> Doc.RunById "main"
