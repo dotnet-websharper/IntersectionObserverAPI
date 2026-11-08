@@ -1,0 +1,20 @@
+type file
+id WebSharper.IntersectionObserver
+authors
+    IntelliFactory
+owners
+    IntelliFactory
+repositoryType git
+repositoryUrl https://github.com/dotnet-websharper/IntersectionObserverAPI/
+licenseUrl https://github.com/dotnet-websharper/IntersectionObserverAPI/blob/main/LICENSE.md
+iconUrl https://github.com/dotnet-websharper/core/raw/websharper50/tools/WebSharper.png
+projectUrl https://github.com/dotnet-websharper/IntersectionObserverAPI
+description
+    WebSharper bindings for IntersectionObserver
+tags
+    Web JavaScript F# C#
+files
+    ../WebSharper.IntersectionObserver/bin/Release/netstandard2.0/WebSharper.IntersectionObserver.dll ==> lib/netstandard2.0
+    ../WebSharper.IntersectionObserver/bin/Release/netstandard2.0/WebSharper.IntersectionObserver.xml ==> lib/netstandard2.0
+dependencies
+        WebSharper ~> LOCKEDVERSION:[3]

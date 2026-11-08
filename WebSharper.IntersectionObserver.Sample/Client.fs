@@ -3,40 +3,41 @@
 open WebSharper
 open WebSharper.JavaScript
 open WebSharper.UI
+open WebSharper.UI.Notation
 open WebSharper.UI.Client
 open WebSharper.UI.Templating
 open WebSharper.IntersectionObserver
 
 [<JavaScript>]
 module Client =
-    // The templates are loaded from the DOM, so you just can edit index.html
-    // and refresh your browser, no need to recompile unless you add or remove holes.
+    // The template is loaded from the DOM, so editing index.html and refreshing
+    // the browser is enough; a rebuild is only needed when holes change.
     type IndexTemplate = Template<"wwwroot/index.html", ClientLoad.FromDocument>
 
-    let observeElement () = 
-        let targetBox = JS.Document.QuerySelector(".observer-box")
+    let status = Var.Create "Scroll down to see the effect."
 
-        let observer = new IntersectionObserver((fun (entries: IntersectionObserverEntry array) -> 
-            printfn("for each")
-            for entry in entries do
-                printfn($"Observed: {entry.Target}, isIntersecting: {entry.IsIntersecting}")
-                if (entry.IsIntersecting) then
-                    printfn("Add visible")
-                    entry.Target.ClassList.Add("visible")
-                else
-                    printfn("Remove visible")
-                    entry.Target.ClassList.Remove("visible")
-        ), IntersectionObserverOptions(Threshold = 0.5))
+    let observeElement () =
+        let target = JS.Document.QuerySelector(".observer-box")
 
-        observer.Observe(targetBox)
+        let observer =
+            new IntersectionObserver(
+                (fun (entries: IntersectionObserverEntry array) ->
+                    for entry in entries do
+                        if entry.IsIntersecting then
+                            entry.Target.ClassList.Add("visible")
+                            status := "The observed box is visible."
+                        else
+                            entry.Target.ClassList.Remove("visible")
+                            status := "The observed box is out of view."
+                ),
+                IntersectionObserverOptions(Threshold = 0.5)
+            )
+
+        observer.Observe(target)
 
     [<SPAEntryPoint>]
     let Main () =
-        
-
-        IndexTemplate.Main()
-            .PageInit(fun () ->
-                observeElement()
-            )
-            .Doc()
-        |> Doc.RunById "main"
+        IndexTemplate()
+            .PageInit(fun () -> observeElement ())
+            .status(status.V)
+            .Bind()
