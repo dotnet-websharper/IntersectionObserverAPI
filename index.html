@@ -1,45 +1,57 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Intersection Observer API Example</title>
+    <title>WebSharper Intersection Observer API Demo</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%234f46e5'/%3E%3Crect x='3' y='4' width='4' height='8' fill='white'/%3E%3Crect x='9' y='4' width='4' height='8' fill='white' fill-opacity='.55'/%3E%3C/svg%3E" />
     <link rel="stylesheet" type="text/css" href="Content/WebSharper.IntersectionObserver.Sample.css" />
+    <link rel="stylesheet" type="text/css" href="site.css" />
     <style>
-        /* Don't show the not-yet-loaded templates */
-        [ws-template], [ws-children-template] { display: none; }
         .box {
             width: 100%;
             height: 100px;
-            margin: 50px 0;
-            background-color: lightgray;
+            margin: 24px 0;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 20px;
-            font-weight: bold;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--muted);
+            transition: background-color 220ms ease, border-color 220ms ease, color 220ms ease;
         }
 
-        .visible {
-            background-color: lightgreen !important;
-        }
-        .observer-box {
-            margin-top: 50px;
+        .box.visible {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: var(--primary-text);
         }
     </style>
     <script type="module" src="Content/WebSharper.IntersectionObserver.Sample.head.js"></script>
 </head>
 <body>
-    <h1>Scroll down to see the effect</h1>
-    <div id="main" ws-children-template="Main">
+    <main class="page">
+        <header class="hero">
+            <h1>Intersection Observer API Demo</h1>
+            <p class="lede">
+                Watch an element change when it enters the viewport with the
+                <a href="https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API" target="_blank" rel="noreferrer">Intersection Observer API</a>.
+                Scroll down to see the highlighted box.
+            </p>
+        </header>
+
         <div ws-onafterrender="PageInit">
+            <p class="status" role="status">${status}</p>
             <div class="box">Box 1</div>
             <div class="box">Box 2</div>
             <div class="box">Box 3</div>
             <div class="box">Box 4</div>
-            <div class="box observer-box">Box 5 (Watch Me!)</div>
+            <div class="box observer-box">Box 5 (Watch me!)</div>
         </div>
-    </div>
+    </main>
     <script type="module" src="Content/WebSharper.IntersectionObserver.Sample.min.js"></script>
 </body>
 </html>
