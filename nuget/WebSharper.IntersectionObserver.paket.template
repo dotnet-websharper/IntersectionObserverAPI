@@ -15,6 +15,7 @@ tags
     Web JavaScript F# C#
 files
     ../WebSharper.IntersectionObserver/bin/Release/netstandard2.0/WebSharper.IntersectionObserver.dll ==> lib/netstandard2.0
+    ../WebSharper.IntersectionObserver/bin/Release/netstandard2.0/WebSharper.IntersectionObserver.websharper ==> lib/netstandard2.0
     ../WebSharper.IntersectionObserver/bin/Release/netstandard2.0/WebSharper.IntersectionObserver.xml ==> lib/netstandard2.0
 dependencies
         WebSharper ~> LOCKEDVERSION:[3]
