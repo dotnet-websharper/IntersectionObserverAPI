@@ -1,118 +1,140 @@
-# WebSharper Intersection Observer API Binding
+# WebSharper.IntersectionObserver
 
-This repository provides an F# [WebSharper](https://websharper.com/) binding for the [Intersection Observer API](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API), enabling WebSharper applications to efficiently observe element visibility within a viewport.
+[![NuGet](https://img.shields.io/badge/nuget-not%20published-lightgrey)](https://github.com/dotnet-websharper/IntersectionObserverAPI)
 
-## Repository Structure
+WebSharper bindings for the [Intersection Observer API](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API) —
+observing element visibility within a viewport from F# and C# web apps.
 
-The repository consists of two main projects:
+This repository contains:
 
-1. **Binding Project**:
+| Project | Purpose |
+| --- | --- |
+| `WebSharper.IntersectionObserver` | The binding: WIG definitions for `IntersectionObserver`, `IntersectionObserverEntry`, and `IntersectionObserverOptions`. |
+| `WebSharper.IntersectionObserver.Sample` | An ASP.NET Core SPA that highlights a box when it scrolls into view. |
 
-   - Contains the F# WebSharper binding for the Intersection Observer API.
+## Live demos
 
-2. **Sample Project**:
-   - Demonstrates how to use the Intersection Observer API with WebSharper syntax.
-   - Includes a GitHub Pages demo: [View Demo](https://dotnet-websharper.github.io/IntersectionObserverAPI/).
+**Try it live:** [Open the sample in your browser](https://dotnet-websharper.github.io/IntersectionObserverAPI/)
+
+![Intersection Observer API sample](docs/sample.png)
+
+The sample doubles as the binding's test case: it observes an element and toggles its CSS class as it enters and
+leaves the viewport.
+
+- **Sample (this repository):** <https://dotnet-websharper.github.io/IntersectionObserverAPI/>
+- **Source repository:** <https://github.com/dotnet-websharper/IntersectionObserverAPI>
+- **WebSharper bindings:** <https://websharper.com/bindings>
+
+## Features
+
+- `IntersectionObserver.observe()` / `unobserve()` / `disconnect()` / `takeRecords()`.
+- `IntersectionObserverEntry` (`isIntersecting`, `intersectionRatio`, `target`, `time`, `boundingClientRect`, `intersectionRect`, `rootBounds`).
+- `IntersectionObserverOptions` (`root`, `rootMargin`, `threshold` as a single number or an array).
 
 ## Installation
 
-To use this package in your WebSharper project, add the NuGet package:
+The binding is not currently published to NuGet. Reference the projects from source:
 
 ```bash
-   dotnet add package WebSharper.IntersectionObserver
+git clone https://github.com/dotnet-websharper/IntersectionObserverAPI.git
 ```
 
-## Building
+```xml
+<ItemGroup>
+  <ProjectReference Include="path/to/WebSharper.IntersectionObserver/WebSharper.IntersectionObserver.fsproj" />
+</ItemGroup>
+```
 
-### Prerequisites
-
-- [.NET SDK](https://dotnet.microsoft.com/download) installed on your machine.
-
-### Steps
-
-1. Clone the repository:
-
-   ```bash
-   git clone https://github.com/dotnet-websharper/IntersectionObserver.git
-   cd IntersectionObserver
-   ```
-
-2. Build the Binding Project:
-
-   ```bash
-   dotnet build WebSharper.IntersectionObserver/WebSharper.IntersectionObserver.fsproj
-   ```
-
-3. Build and Run the Sample Project:
-
-   ```bash
-   cd WebSharper.IntersectionObserver.Sample
-   dotnet build
-   dotnet run
-   ```
-
-4. Open the hosted demo to see the Sample project in action:
-   [https://dotnet-websharper.github.io/IntersectionObserverAPI/](https://dotnet-websharper.github.io/IntersectionObserverAPI/)
-
-## Example Usage
-
-Below is an example of how to use the Intersection Observer API in a WebSharper project:
+## Usage
 
 ```fsharp
-namespace WebSharper.IntersectionObserver.Sample
+namespace WebSharper.IntersectionObserver.Demo
 
 open WebSharper
 open WebSharper.JavaScript
-open WebSharper.UI
-open WebSharper.UI.Client
-open WebSharper.UI.Templating
 open WebSharper.IntersectionObserver
 
 [<JavaScript>]
-module Client =
-    // The templates are loaded from the DOM, so you just can edit index.html
-    // and refresh your browser, no need to recompile unless you add or remove holes.
-    type IndexTemplate = Template<"wwwroot/index.html", ClientLoad.FromDocument>
-
-    // Function to observe an element's visibility changes
+module Demo =
     let observeElement () =
-      // Select the element with the class "observer-box"
-      let targetBox = JS.Document.QuerySelector(".observer-box")
+        let target = JS.Document.QuerySelector(".observer-box")
 
-      // Create a new IntersectionObserver instance with a callback function
-      let observer = new IntersectionObserver((fun (entries: IntersectionObserverEntry array) ->
-         printfn("for each")
-         for entry in entries do
-               // Log the observed element and its visibility status
-               printfn($"Observed: {entry.Target}, isIntersecting: {entry.IsIntersecting}")
-               if (entry.IsIntersecting) then
-                  // If the element is visible, add the "visible" class
-                  printfn("Add visible")
-                  entry.Target.ClassList.Add("visible")
-               else
-                  // If the element is not visible, remove the "visible" class
-                  printfn("Remove visible")
-                  entry.Target.ClassList.Remove("visible")
-      ), IntersectionObserverOptions(Threshold = 0.5))
-
-      // Start observing the target element
-      observer.Observe(targetBox)
-
-    [<SPAEntryPoint>]
-    let Main () =
-        // Initialize the UI template
-        IndexTemplate.Main()
-            .PageInit(fun () ->
-               observeElement()
+        let observer =
+            new IntersectionObserver(
+                (fun (entries: IntersectionObserverEntry array) ->
+                    for entry in entries do
+                        if entry.IsIntersecting then
+                            entry.Target.ClassList.Add("visible")
+                        else
+                            entry.Target.ClassList.Remove("visible")
+                ),
+                IntersectionObserverOptions(Threshold = 0.5)
             )
-            .Doc()
-        |> Doc.RunById "main"
+
+        observer.Observe(target)
 ```
 
-This example demonstrates how to observe and react to changes in the visibility of an element using the Intersection Observer API in WebSharper.
+The callback receives an array of `IntersectionObserverEntry` values. `entry.IsIntersecting` is true when the
+element crosses the configured threshold.
 
-## Important Considerations
+## Running the sample
 
-- **Performance Efficiency**: Intersection Observer is optimized for performance, reducing the need for frequent polling.
-- **Threshold Values**: The threshold determines the visibility percentage required to trigger a callback.
-- **Limited Browser Support**: Some older browsers do not support the Intersection Observer API; check [MDN Intersection Observer API](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API) for the latest compatibility details.
+Build the sample in Release and serve its static output:
+
+```bash
+dotnet build WebSharper.IntersectionObserver.Sample/WebSharper.IntersectionObserver.Sample.fsproj -c Release
+python3 -m http.server -d WebSharper.IntersectionObserver.Sample/wwwroot 8099
+```
+
+Open <http://localhost:8099/> and scroll down. The last box turns the primary color when it enters the viewport.
+
+Alternatively, run the ASP.NET Core host:
+
+```bash
+dotnet run --project WebSharper.IntersectionObserver.Sample
+```
+
+## Building from source
+
+### Prerequisites
+
+- [.NET SDK 10](https://dotnet.microsoft.com/download) or later.
+
+### Build
+
+```bash
+dotnet build WebSharper.IntersectionObserver.sln -c Release
+```
+
+The binding projects target `netstandard2.0`; the sample targets `net10.0`.
+
+## Deployment
+
+Pushing to `main` triggers `.github/workflows/ghpages.yml`, which builds the sample in Release and publishes
+`WebSharper.IntersectionObserver.Sample/wwwroot` to the `gh-pages` branch.
+
+## Repository layout
+
+```
+WebSharper.IntersectionObserver/              # binding (WIG definitions)
+  Main.fs
+WebSharper.IntersectionObserver.Sample/       # ASP.NET Core SPA demo
+  Client.fs
+  Startup.fs
+  wwwroot/
+    index.html
+    site.css
+.github/workflows/ghpages.yml                 # build + deploy the sample to GitHub Pages
+```
+
+## Notes on the API
+
+- **Performance:** Intersection Observer is optimized for performance and avoids polling the scroll position.
+- **Threshold:** the threshold is the fraction of the element that must be visible before the callback fires. Pass
+  a single number or an array of numbers.
+- **Root:** `root` is the viewport by default. Pass a `Document` or `Element` to observe inside a scroll container.
+- **Browser support:** Intersection Observer is Baseline and available in all modern browsers.
+
+## License
+
+Apache 2.0 — see [LICENSE.md](LICENSE.md).
